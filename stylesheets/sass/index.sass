@@ -1,14 +1,23 @@
 @use 'variable' as v
 
+html
+  font-family: 'Lato', 'Lucida Grande', 'Lucida Sans Unicode', Tahoma, Sans-Serif
+  line-height: 1.5
+  font-weight: 400
+  font-size: 15px
+
+body
+  padding: 0
+  margin: 0
+  background: #fefefe
+
+
+*,*:before,*:after 
+    box-sizing: border-box
 
 .l-flex
   display: flex
 
-html
-  background: v.$background-color
-  line-height: 1.5
-  font-weight: 400px
-  font-size: 15px
 
 h1
   font-size: 1.2rem
@@ -37,6 +46,9 @@ h1
   display: flex
   padding: 8px 16px
 
+.l-board
+  padding: 16px
+
 
 .table
   background: black
@@ -58,10 +70,17 @@ h1
   text-align: center
 
 .button
-  display: inline-block
-  border: 2px solid black
-  border-radius: 4px
+  transition: all 0.5 ease
   font-weight: bold
   width: 100%
   text-align: center
   cursor: pointer
+  display: inline-block
+  border: 2px solid black
+  border-radius: 4px
+
+.button:hover
+  transition: all 0.5 ease
+  color: #fefefe
+  background: black
+    

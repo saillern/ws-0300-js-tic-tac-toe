@@ -1,12 +1,11 @@
 const PARAMETER ={
-    circleTrun : true, //サークルの手番の場合true
+    circleTurn : true, //サークルの手番の場合true
     turnCount : 0, //ターンのカウント
     tableValue: document.querySelectorAll(".js-cell"),
     stateMessage: document.querySelector(".js-state-message"),
     circleActive: document.querySelector(".turn-symbol.circle"),
     crossActive: document.querySelector(".turn-symbol.cross"),
-    circleCell :  new Array(10).fill(false),
-    crossCell :  new Array(10).fill(false),
+    cellData :  new Array(9).fill(-1),
     win: false,
 }
 
@@ -17,68 +16,79 @@ const STATE_MESSAGE = {
 }
 
 const PATTERN = {
-    circle: "◯",
-    cross: "✕"
+    circle: "○",
+    cross: "×"
 }
 
 const WIN_PATTERN = [
-    [1,2,3],[4,5,6],[7,8,9],
-    [1,4,7],[2,5,8],[3,6,9],
-    [1,5,9],[3,5,7]
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
 ]
 
+function writeCell(){
+
+}
+
+function displayTurn(turn){
+    if(turn){
+        PARAMETER.circleActive.classList.add("active")
+        PARAMETER.crossActive.classList.remove("active")
+    }
+    else{
+        PARAMETER.crossActive.classList.add("active")
+        PARAMETER.circleActive.classList.remove("active")
+    }
+}
+
+function checkWin(first,second,third){
+    if(PARAMETER.cellData[first] === 0 && (PARAMETER.cellData[first] === PARAMETER.cellData[second]) && ( PARAMETER.cellData[second] === PARAMETER.cellData[third])){
+        PARAMETER.win = true
+        PARAMETER.stateMessage.textContent = PATTERN.circle + " win!!"
+        return 
+    }
+    if(PARAMETER.cellData[first] === 1 && (PARAMETER.cellData[first] === PARAMETER.cellData[second]) && ( PARAMETER.cellData[second] === PARAMETER.cellData[third])){
+        PARAMETER.win = true
+        PARAMETER.stateMessage.textContent = PATTERN.cross + " win!!"
+        return 
+    }
+}
+
+function checkDraw(num){
+    if(num === 9){
+        PARAMETER.win = true
+        PARAMETER.stateMessage.textContent =  "draw"
+        return 
+    }
+}
 
 //クリック時の動作
 function cellClick(v){
     //セルの書き込み
     if(v.currentTarget.textContent === "" && !PARAMETER.win){
-        if(PARAMETER.circleTrun){
+        if(PARAMETER.circleTurn){
             v.currentTarget.textContent = PATTERN.circle
-            PARAMETER.circleCell[v.currentTarget.dataset.key] = true
-            PARAMETER.circleTrun = false
+            PARAMETER.cellData[v.currentTarget.dataset.key-1] = 0
+            PARAMETER.circleTurn = false
         }
         else{
             v.currentTarget.textContent = PATTERN.cross
-            PARAMETER.crossCell[v.currentTarget.dataset.key] = true
-            PARAMETER.circleTrun = true
+            PARAMETER.cellData[v.currentTarget.dataset.key-1] = 1
+            PARAMETER.circleTurn = true
         }
         PARAMETER.turnCount++
 
-        //Turn表示(アンダーバー)の更新
-        if(PARAMETER.circleTrun){
-            PARAMETER.circleActive.classList.add("active")
-            PARAMETER.crossActive.classList.remove("active")
-        }
-        else{
-            PARAMETER.crossActive.classList.add("active")
-            PARAMETER.circleActive.classList.remove("active")
-        }
+        displayTurn(PARAMETER.circleTurn)
 
-        //勝利判定
         WIN_PATTERN.forEach(ptn =>
-
             {
-                if(PARAMETER.circleCell[ptn[0]] && PARAMETER.circleCell[ptn[1]] && PARAMETER.circleCell[ptn[2]]){
-                    PARAMETER.win = true
-                    PARAMETER.stateMessage.textContent = PATTERN.circle + " win!!"
-                    return 
-                }
-                if(PARAMETER.crossCell[ptn[0]] && PARAMETER.crossCell[ptn[1]] && PARAMETER.crossCell[ptn[2]]){
-                    PARAMETER.win = true
-                    PARAMETER.stateMessage.textContent = PATTERN.cross + " win!!"
-                    console.log("WIN")
-                    return 
-                }
+                checkWin(ptn[0],ptn[1],ptn[2])
         })
-
-        //ドロー判定
-            //footerメッセージ更新
+        checkDraw(PARAMETER.turnCount)
     }
-
 }
 
 
-//リスタートButton
 function reset(){
     const restart = document.querySelector(".js-restart")
     restart.addEventListener("click",()=>{
