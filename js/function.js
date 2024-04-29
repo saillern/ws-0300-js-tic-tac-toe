@@ -55,7 +55,7 @@ function checkWin(first,second,third){
 }
 
 function checkDraw(num){
-    if(num === 9){
+    if(num === 9 && !PARAMETER.win){
         PARAMETER.win = true
         PARAMETER.stateMessage.textContent =  "draw"
         return 
