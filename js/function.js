@@ -53,7 +53,7 @@ function checkWin(cells){
 }
 
 function checkDraw(num){
-    if(num === 9 && PARAMETER.win){
+    if(num === 9 && !PARAMETER.done){
         PARAMETER.done = true
         PARAMETER.stateMessage.textContent =  "draw"
     }
@@ -74,7 +74,6 @@ function cellClick(ele, index){
     cellData[index] = textContent
 
     displayTurn(circleTurn)
-    console.log(checkWin(cellData))
     if(checkWin(cellData)){
         stateMessage.textContent = textContent + " win!!"
         PARAMETER.done = true
