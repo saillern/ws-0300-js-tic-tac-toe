@@ -29,7 +29,7 @@ const WIN_PATTERN = [
 ]
 
 
-//修正3 不要な関数を削除 消し忘れ
+//修正3 不要な関数を削除
 
 function displayTurn(turn){
     if(turn){
@@ -44,7 +44,7 @@ function displayTurn(turn){
 
 
 //修正4. ピュアな関数に修正
-//return を値が入力済みかつ、first~thirdの要素が一致する
+//return true条件を「値が入力済みかつ、first~thirdの要素が一致する」に変更
 function checkWin(cells){
     return WIN_PATTERN.some(row => { //
         const [first, second, third] = row
