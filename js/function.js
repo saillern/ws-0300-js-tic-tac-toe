@@ -1,13 +1,11 @@
-const PARAMETER ={
-    circleTurn : true, //サークルの手番の場合true
-    turnCount : 0, //ターンのカウント
-    tableValue: document.querySelectorAll(".js-cell"),
-    stateMessage: document.querySelector(".js-state-message"),
-    //修正1 js-xxxに修正
-    circleActive: document.querySelector(".js-turn-symbol.circle"),
-    crossActive: document.querySelector(".js-turn-symbol.cross"),
-    cellData :  new Array(9).fill(""), //文字列表現に修正
-    //修正2 変数名を"win"から"done"に修正
+const parameters ={
+    circleTurn : true,
+    turnCount : 0, 
+    cellElements: document.querySelectorAll(".js-cell"),
+    stateMessageElement: document.querySelector(".js-state-message"),
+    circleActiveElement: document.querySelector(".js-turn-symbol.circle"),
+    crossActiveElement: document.querySelector(".js-turn-symbol.cross"),
+    cells :  new Array(9).fill(""), 
     done: false,
 }
 
@@ -29,57 +27,49 @@ const WIN_PATTERN = [
 ]
 
 
-//修正3 不要な関数を削除
-
 function displayTurn(turn){
     if(turn){
-        PARAMETER.circleActive.classList.add("active")
-        PARAMETER.crossActive.classList.remove("active")
+        parameters.circleActiveElement.classList.add("active")
+        parameters.crossActiveElement.classList.remove("active")
     }
     else{
-        PARAMETER.crossActive.classList.add("active")
-        PARAMETER.circleActive.classList.remove("active")
+        parameters.crossActiveElement.classList.add("active")
+        parameters.circleActiveElement.classList.remove("active")
     }
 }
 
 
-//修正4. ピュアな関数に修正
-//return true条件を「値が入力済みかつ、first~thirdの要素が一致する」に変更
 function checkWin(cells){
-    return WIN_PATTERN.some(row => { //
+    return WIN_PATTERN.some(row => { 
         const [first, second, third] = row
         return cells[first] != "" && (cells[first] === cells[second]) && (cells[first] === cells[third])
     })
 }
 
 function checkDraw(num){
-    if(num === 9 && !PARAMETER.done){
-        PARAMETER.done = true
-        PARAMETER.stateMessage.textContent =  "draw"
+    if(num === 9 && !parameters.done){
+        parameters.done = true
+        parameters.stateMessageElement.textContent =  "draw"
     }
 }
 
-//修正6
-//変数をconstで宣言し直す
-//ifが減るように修正
 function cellClick(ele, index){
-    //修正5 早期returnをするように修正
-    if (ele.textContent != "" || PARAMETER.done)return
-    const {cellData, turnCount, stateMessage} = PARAMETER
+    if (ele.textContent != "" || parameters.done)return
+    const {cells, turnCount, stateMessageElement} = parameters
     const {circle, cross} = PATTERN
     const circleTurn = (turnCount%2 === 0)
     const textContent = circleTurn? circle : cross
 
     ele.textContent = textContent
-    cellData[index] = textContent
+    cells[index] = textContent
 
-    displayTurn(circleTurn)
-    if(checkWin(cellData)){
-        stateMessage.textContent = textContent + " win!!"
-        PARAMETER.done = true
+    displayTurn(!circleTurn)
+    if(checkWin(cells)){
+        stateMessageElement.textContent = textContent + " win!!"
+        parameters.done = true
     }
 
-    PARAMETER.turnCount++
+    parameters.turnCount++
     checkDraw(turnCount+1)
 }
 
@@ -93,8 +83,8 @@ function reset(){
 
 
 function runGame() {
-    const {tableValue} = PARAMETER
-    tableValue.forEach( (ele, index) => 
+    const {cellElements} = parameters
+    cellElements.forEach( (ele, index) => 
         ele.addEventListener('click',() => cellClick(ele,index))
     )
     reset()
